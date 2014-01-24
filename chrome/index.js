@@ -23,6 +23,7 @@ var hyper = React.createClass({displayName: 'hyper',
   },
 
   handleAction: function(href, method, data) {
+    this.setState({loading: true});
     var self = this;
     var start = new Date();
     method = (method || 'GET').toUpperCase();
@@ -34,6 +35,7 @@ var hyper = React.createClass({displayName: 'hyper',
     if (data && method !== 'GET') req.send(data);
 
     req.end(function(err, res) {
+      self.setState({loading: false});
       if (err) return self.setState({err: err});
 
       self.setState({
@@ -46,6 +48,7 @@ var hyper = React.createClass({displayName: 'hyper',
         data: data,
         err: null
       });
+      document.title = href;
       window.location.hash = href;
     });
     return false;
@@ -86,6 +89,7 @@ var hyper = React.createClass({displayName: 'hyper',
           return d.li({key: key}, key, ': ', s.headers[key]);
         }))
       ),
+      error(s.err),
       content
     );
   }
@@ -222,7 +226,6 @@ function merge(a, b) {
   return a;
 }
 
-React.renderComponent(
-  hyper(),
-  document.getElementById('main')
-);
+module.exports = function(elem) {
+  React.renderComponent(hyper(), elem);
+};

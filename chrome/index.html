@@ -14,6 +14,9 @@
   <body data-ng-controller="HyperController">
     <div id="main"></div>
     <script src="build/build.js"></script>
-    <script>require('hyper.chrome');</script>
+    <script>
+      var hyper = require('hyper.chrome');
+      hyper(document.getElementById('main'));
+    </script>
   </body>
 </html>
