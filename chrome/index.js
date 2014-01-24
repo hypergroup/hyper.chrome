@@ -14,7 +14,12 @@ var hyper = React.createClass({displayName: 'hyper',
   },
 
   componentDidMount: function() {
+    var self = this;
     if (window.location.hash) this.handleAction(window.location.hash.replace('#', ''));
+    window.onhashchange = function() {
+      var url = window.location.hash.replace('#', '');
+      if (self.state.url !== url) self.handleAction(url);
+    };
   },
 
   handleAction: function(href, method, data) {
@@ -28,12 +33,15 @@ var hyper = React.createClass({displayName: 'hyper',
 
     req.end(function(err, res) {
       if (err) return self.setState({err: err});
+
       self.setState({
         status: res.status,
         headers: res.headers,
         body: res.body,
         time: (new Date()) - start,
-        url: href
+        url: href,
+        data: data,
+        err: null
       });
       window.location.hash = href;
     });
@@ -61,6 +69,7 @@ var hyper = React.createClass({displayName: 'hyper',
     return d.div({'className': ''},
       d.form({className: 'url', onSubmit: onSubmit},
         d.input({name: 'url', type: 'url', placeholder: 'http://', onChange: changeUrl, value: this.state.url})),
+      (s.err ? d.div({className: 'error'}, d.pre(null, s.err.message), d.pre(null, s.err.stack)) : null),
       d.div({'className': 'status'}, 'status: ', s.status),
       d.div({'className': 'time'}, 'response time: ', s.time, 'ms'),
       d.div({'className': 'headers'},
