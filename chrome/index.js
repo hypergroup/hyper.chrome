@@ -28,6 +28,8 @@ var hyper = React.createClass({displayName: 'hyper',
     method = (method || 'GET').toUpperCase();
     var req = superagent(method, href);
 
+    req.set('cache-control', 'max-age=0');
+
     if (data && method === 'GET') req.query(data);
     if (data && method !== 'GET') req.send(data);
 
@@ -38,6 +40,7 @@ var hyper = React.createClass({displayName: 'hyper',
         status: res.status,
         headers: res.headers,
         body: res.body,
+        text: res.text,
         time: (new Date()) - start,
         url: href,
         data: data,
@@ -66,10 +69,16 @@ var hyper = React.createClass({displayName: 'hyper',
       return false;
     }
 
+    var content;
+    try {
+      content = d.pre({'className': 'body'}, body(s.body, createAction, this.forceUpdate.bind(this)));
+    } catch (err) {
+      content = [error(err), d.pre({className: 'bodt'}, s.text)];
+    };
+
     return d.div({'className': ''},
       d.form({className: 'url', onSubmit: onSubmit},
         d.input({name: 'url', type: 'url', placeholder: 'http://', onChange: changeUrl, value: this.state.url})),
-      (s.err ? d.div({className: 'error'}, d.pre(null, s.err.message), d.pre(null, s.err.stack)) : null),
       d.div({'className': 'status'}, 'status: ', s.status),
       d.div({'className': 'time'}, 'response time: ', s.time, 'ms'),
       d.div({'className': 'headers'},
@@ -77,7 +86,7 @@ var hyper = React.createClass({displayName: 'hyper',
           return d.li({key: key}, key, ': ', s.headers[key]);
         }))
       ),
-      d.pre({'className': 'body'}, body(s.body, createAction, this.forceUpdate.bind(this)))
+      content
     );
   }
 });
@@ -196,6 +205,12 @@ function image(content, transition, force) {
     kvs(content, transition, force),
     d.div({className: 'item'},
     d.img({src: content.src, className: 'item level'})));
+}
+
+function error(err) {
+  return err
+    ? d.div({className: 'error'}, d.pre(null, err.message), d.pre(null, err.stack))
+    : null;
 }
 
 function merge(a, b) {
