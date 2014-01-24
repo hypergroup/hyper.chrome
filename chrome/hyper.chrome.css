@@ -1,6 +1,7 @@
 body {
   font-family: 'Helvetica, Arial, san-serif';
   padding: 20px;
+  margin-top: 100px;
 }
 
 .string {
@@ -59,4 +60,17 @@ body {
 
 .level {
   margin-left: 15px;
+}
+
+.url {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+}
+.url input {
+  width: 100%;
+  font-size: 1em;
+  padding: 10px;
 }

@@ -9,7 +9,8 @@ var hyper = React.createClass({displayName: 'hyper',
       status: 0,
       headers: {},
       body: {},
-      time: 0
+      time: 0,
+      reqheaders: {accept: 'application/json', authorization: ''}
     };
   },
 
@@ -30,6 +31,8 @@ var hyper = React.createClass({displayName: 'hyper',
     var req = superagent(method, href);
 
     req.set('cache-control', 'max-age=0');
+
+    req.set(self.state.reqheaders);
 
     if (data && method === 'GET') req.query(data);
     if (data && method !== 'GET') req.send(data);
@@ -79,9 +82,37 @@ var hyper = React.createClass({displayName: 'hyper',
       content = [error(err), d.pre({className: 'bodt'}, s.text)];
     };
 
+    function addHeader(e) {
+      var inp = e.target.children[0];
+      self.state.reqheaders[inp.value] = '';
+      inp.value = '';
+      self.forceUpdate();
+      return false;
+    }
+
     return d.div({'className': ''},
       d.form({className: 'url', onSubmit: onSubmit},
         d.input({name: 'url', type: 'url', placeholder: 'http://', onChange: changeUrl, value: this.state.url})),
+      d.div({className: 'headers'},
+        Object.keys(s.reqheaders).map(function(name) {
+          var val = s.reqheaders[name];
+
+          function changeValue(e) {
+            s.reqheaders[name] = e.target.value;
+            self.forceUpdate();
+          }
+
+          function onClick () {
+            delete s.reqheaders[name];
+            self.forceUpdate();
+          }
+
+          return d.div({className: 'header'},
+            d.span({value: name}, name + ': '), d.input({type: 'text', key: 'value', value: val, onChange: changeValue}),
+            d.a({href: 'javascript:;', onClick: onClick}, 'remove'));
+        }),
+        d.form({className: 'add-header', onSubmit: addHeader},
+          d.input({placeholder: 'New header', name: 'value', type: 'text'}))),
       d.div({'className': 'status'}, 'status: ', s.status),
       d.div({'className': 'time'}, 'response time: ', s.time, 'ms'),
       d.div({'className': 'headers'},
