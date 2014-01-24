@@ -3,15 +3,26 @@
   "version": "0.0.1",
   "manifest_version": 2,
   "description": "Hyper client for chrome",
-  "app": {
-    "launch": {
-      "local_path": "index.html"
+
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content.js"],
+      "run_at": "document_end",
+      "all_frames": true
     }
-  },
+  ],
+
   "permissions": [
+    "activeTab",
     "http://*/*",
     "https://*/*"
   ],
   "content_security_policy": "default-src 'self'; connect-src *; script-src 'self' 'unsafe-eval'; img-src *;",
-  "offline_enabled": true
+  "offline_enabled": true,
+
+  "web_accessible_resources": [
+    "build/build.css",
+    "build/build.js"
+  ]
 }

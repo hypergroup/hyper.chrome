@@ -3,36 +3,33 @@ var superagent = require('superagent');
 var type = require('type');
 var d = React.DOM;
 
+var DEFAULT_HEADERS = '{"accept": "application/hyper+json", "authorization": "Bearer ", "cache-control": "max-age=0"}';
+
 var hyper = React.createClass({displayName: 'hyper',
   getInitialState: function() {
+    var headers = JSON.parse(window.localStorage['hyper-headers'] || DEFAULT_HEADERS);
     return {
-      status: 0,
-      headers: {},
-      body: {},
-      time: 0,
-      reqheaders: {accept: 'application/json', authorization: ''}
+      body: this.props.state,
+      text: this.props.text,
+      headers: headers
     };
   },
 
   componentDidMount: function() {
     var self = this;
-    if (window.location.hash) this.handleAction(window.location.hash.replace('#', ''));
-    window.onhashchange = function() {
-      var url = window.location.hash.replace('#', '');
-      if (self.state.url !== url) self.handleAction(url);
+    window.onpopstate = function(e) {
+      self.handleAction(window.location + '');
     };
   },
 
-  handleAction: function(href, method, data) {
+  handleAction: function(href, method, data, push) {
     this.setState({loading: true});
     var self = this;
     var start = new Date();
     method = (method || 'GET').toUpperCase();
     var req = superagent(method, href);
 
-    req.set('cache-control', 'max-age=0');
-
-    req.set(self.state.reqheaders);
+    req.set(self.state.headers);
 
     if (data && method === 'GET') req.query(data);
     if (data && method !== 'GET') req.send(data);
@@ -42,17 +39,14 @@ var hyper = React.createClass({displayName: 'hyper',
       if (err) return self.setState({err: err});
 
       self.setState({
-        status: res.status,
-        headers: res.headers,
         body: res.body,
         text: res.text,
-        time: (new Date()) - start,
-        url: href,
-        data: data,
         err: null
       });
-      document.title = href;
-      window.location.hash = href;
+      var title = res.body.title || res.body.name || href;
+      document.title = title;
+      if (window.location === href || method !== 'GET') return;
+      if (push) window.history.pushState(true, title, req.url);
     });
     return false;
   },
@@ -62,48 +56,45 @@ var hyper = React.createClass({displayName: 'hyper',
     var self = this;
 
     function createAction(action, method, params) {
-      return self.handleAction.bind(self, action, method, params);
-    }
-
-    function changeUrl(e) {
-      var val = e.target.value;
-      self.setState({url: val});
-    }
-
-    function onSubmit() {
-      self.handleAction(self.state.url);
-      return false;
+      return self.handleAction.bind(self, action, method, params, true);
     }
 
     var content;
     try {
-      content = d.pre({'className': 'body'}, body(s.body, createAction, this.forceUpdate.bind(this)));
+      content = d.pre({'className': 'content'}, body(s.body, createAction, this.forceUpdate.bind(this)));
     } catch (err) {
-      content = [error(err), d.pre({className: 'bodt'}, s.text)];
+      content = [error(err), d.pre({className: 'content'}, s.text)];
     };
+
+    function persistHeaders () {
+      window.localStorage.setItem('hyper-headers', JSON.stringify(s.headers));
+    }
 
     function addHeader(e) {
       var inp = e.target.children[0];
-      self.state.reqheaders[inp.value] = '';
+      s.headers[inp.value] = '';
+      persistHeaders();
       inp.value = '';
       self.forceUpdate();
       return false;
     }
 
     return d.div({'className': ''},
-      d.form({className: 'url', onSubmit: onSubmit},
-        d.input({name: 'url', type: 'url', placeholder: 'http://', onChange: changeUrl, value: this.state.url})),
+      error(s.err),
+      content,
       d.div({className: 'headers'},
-        Object.keys(s.reqheaders).map(function(name) {
-          var val = s.reqheaders[name];
+        Object.keys(s.headers).map(function(name) {
+          var val = s.headers[name];
 
           function changeValue(e) {
-            s.reqheaders[name] = e.target.value;
+            s.headers[name] = e.target.value;
+            persistHeaders();
             self.forceUpdate();
           }
 
           function onClick () {
-            delete s.reqheaders[name];
+            delete s.headers[name];
+            persistHeaders();
             self.forceUpdate();
           }
 
@@ -112,16 +103,8 @@ var hyper = React.createClass({displayName: 'hyper',
             d.a({href: 'javascript:;', onClick: onClick}, 'remove'));
         }),
         d.form({className: 'add-header', onSubmit: addHeader},
-          d.input({placeholder: 'New header', name: 'value', type: 'text'}))),
-      d.div({'className': 'status'}, 'status: ', s.status),
-      d.div({'className': 'time'}, 'response time: ', s.time, 'ms'),
-      d.div({'className': 'headers'},
-        d.ul(null, Object.keys(s.headers).map(function(key) {
-          return d.li({key: key}, key, ': ', s.headers[key]);
-        }))
-      ),
-      error(s.err),
-      content
+          d.input({placeholder: 'New header', name: 'value', type: 'text'}))
+      )
     );
   }
 });
@@ -258,5 +241,11 @@ function merge(a, b) {
 }
 
 module.exports = function(elem) {
-  React.renderComponent(hyper(), elem);
+  var init = {state: {}};
+  if (elem.innerHTML) {
+    init.state = JSON.parse(elem.innerHTML);
+    init.text = elem.innerHTML;
+  }
+  React.renderComponent(hyper(init), elem);
 };
+
