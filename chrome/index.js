@@ -3,6 +3,8 @@ var superagent = require('superagent');
 var type = require('type');
 var d = React.DOM;
 
+superagent.parse['application/hyper+json'] = JSON.parse;
+
 var DEFAULT_HEADERS = '{"accept": "application/hyper+json", "authorization": "Bearer ", "cache-control": "max-age=0"}';
 
 var hyper = React.createClass({displayName: 'hyper',
