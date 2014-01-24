@@ -1,0 +1,62 @@
+body {
+  font-family: 'Helvetica, Arial, san-serif';
+  padding: 20px;
+}
+
+.string {
+  color: green;
+}
+.string:before {
+  content: "\"";
+}
+.string:after {
+  content: "\"";
+}
+
+.key {
+  float: left;
+  color: black;
+  font-weight: bold;
+}
+.key:before {
+
+}
+.key:after {
+  content: ": ";
+}
+
+.object:before {
+  content: "{";
+}
+.object:after {
+  content: "}";
+}
+
+.array:before {
+  content: "[";
+}
+.array:after {
+  content: "]";
+}
+
+.number {
+  color: blue;
+}
+
+.boolean {
+  color: orange;
+}
+
+.item {
+  /* float: left; */
+}
+.item:after {
+  /* content: ","; */
+}
+.item:last-child:after {
+  content: "";
+}
+
+.level {
+  margin-left: 15px;
+}
