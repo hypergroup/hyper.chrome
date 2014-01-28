@@ -67,7 +67,7 @@ pre {
 }
 
 .headers {
-  position: absolute;
+  position: fixed;
   bottom: 5px;
   right: 5px;
   background: #033643;

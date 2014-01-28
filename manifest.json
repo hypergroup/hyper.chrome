@@ -23,7 +23,9 @@
 
   "web_accessible_resources": [
     "loader.js",
-    "build/build.css",
-    "build/build.js"
-  ]
+    "hyper.css",
+    "hyper.js"
+  ],
+
+  "update_url": "http://chrome.hypergroup.io/updates.xml"
 }
