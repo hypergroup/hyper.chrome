@@ -1,27 +1,63 @@
+/**
+ * Module dependencies
+ */
+
 var React = require('react');
 var superagent = require('superagent');
 var type = require('type');
 var d = React.DOM;
 
+/**
+ * Parse hyper+json as well
+ */
+
 superagent.parse['application/hyper+json'] = JSON.parse;
+
+/**
+ * Default headers
+ */
 
 var DEFAULT_HEADERS = '{"accept": "application/hyper+json", "authorization": "Bearer ", "cache-control": "max-age=0"}';
 
+/**
+ * Default storage
+ */
+
+function defaultStorage(headers) {
+  if (arguments.length === 0) return JSON.parse(window.localStorage['hyper-headers'] || DEFAULT_HEADERS);
+  window.localStorage.setItem('hyper-headers', JSON.stringify(headers));
+}
+
+/**
+ * Default history
+ */
+
+function defaultHistory(url, title) {
+  if (typeof url === 'function') return window.onpopstate = function() { url(window.location + ''); };
+  window.history.pushState(true, title, url);
+}
+
+/**
+ * Create the hyper class
+ */
+
 var hyper = React.createClass({displayName: 'hyper',
   getInitialState: function() {
-    var headers = JSON.parse(window.localStorage['hyper-headers'] || DEFAULT_HEADERS);
+    var storage = this.props.storage || defaultStorage;
     return {
       body: this.props.state,
       text: this.props.text,
-      headers: headers
+      storage: storage,
+      headers: storage(),
+      history: this.props.history || defaultHistory
     };
   },
 
   componentDidMount: function() {
     var self = this;
-    window.onpopstate = function(e) {
-      self.handleAction(window.location + '');
-    };
+    self.state.history(function(url) {
+      self.handleAction(url);
+    });
   },
 
   handleAction: function(href, method, data, push) {
@@ -48,7 +84,7 @@ var hyper = React.createClass({displayName: 'hyper',
       var title = res.body.title || res.body.name || href;
       document.title = title;
       if (window.location === href || method !== 'GET') return;
-      if (push) window.history.pushState(true, title, req.url);
+      if (push) self.state.history(req.url, title);
     });
     return false;
   },
@@ -69,7 +105,7 @@ var hyper = React.createClass({displayName: 'hyper',
     };
 
     function persistHeaders () {
-      window.localStorage.setItem('hyper-headers', JSON.stringify(s.headers));
+      self.state.storage(s.headers);
     }
 
     function addHeader(e) {
@@ -195,9 +231,7 @@ function form(content, transition, force) {
 
 function input(key, c, transition, onChange) {
   var opts = c.options || [];
-  // opts.unshift(null);
 
-  c.required = c.required ? 'required' : undefined;
   c.type = c.type || 'text';
 
   var props = {
@@ -254,9 +288,16 @@ function merge(a, b) {
   return a;
 }
 
-module.exports = function(elem) {
-  var init = {state: {}};
-  if (!elem.innerHTML) return React.renderComponent(hyper(init), elem)
+module.exports = function(elem, storage, history) {
+  var init = {
+    state: {
+      storage: storage,
+      history: history
+    }
+  };
+
+  if (!elem.innerHTML) return React.renderComponent(hyper(init), elem);
+
   try {
     init.state = JSON.parse(elem.innerHTML);
     init.text = elem.innerHTML;
