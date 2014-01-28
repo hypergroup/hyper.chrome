@@ -4,7 +4,6 @@
 (function() {
 
 if (document.body && (document.body.childNodes[0] && document.body.childNodes[0].tagName == "PRE" || document.body.children.length == 0)) {
-  loadStyle(chrome.extension.getURL('build/build.css'));
   loadScript(chrome.extension.getURL('build/build.js'));
 }
 
@@ -13,7 +12,7 @@ function loadScript(href) {
   if (!script) return;
   script.setAttribute('type', 'text/javascript');
   script.setAttribute('src', href);
-  script.setAttribute('onload', "require('hyper.chrome')(document.body.children[0])");
+  script.setAttribute('onload', "require('hyper.chrome')(document.body.children[0]) && loadStyle(chrome.extension.getURL('build/build.css'))");
   document.getElementsByTagName('head')[0].appendChild(script);
 }
 

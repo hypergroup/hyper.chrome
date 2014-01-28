@@ -74,17 +74,23 @@ var hyper = React.createClass({displayName: 'hyper',
 
     function addHeader(e) {
       var inp = e.target.children[0];
-      s.headers[inp.value] = '';
-      persistHeaders();
+      var name = inp.value;
       inp.value = '';
-      self.forceUpdate();
+      setHeader(name, '');
       return false;
+    }
+
+    function setHeader(key, value) {
+      s.headers[key] = value;
+      persistHeaders();
+      self.forceUpdate();
     }
 
     return d.div({'className': ''},
       error(s.err),
       content,
       d.div({className: 'headers'},
+        accessTokenPrompt(s.body, setHeader),
         Object.keys(s.headers).map(function(name) {
           var val = s.headers[name];
 
@@ -110,6 +116,12 @@ var hyper = React.createClass({displayName: 'hyper',
     );
   }
 });
+
+function accessTokenPrompt(body, set) {
+  if (!body || !body.access_token) return;
+  return d.div({className: 'access-token-prompt'},
+    d.a({onClick: function() {set('authorization', 'Bearer ' + body.access_token)}, href: 'javascript:;'}, 'Use access token for "authorization" header?'));
+}
 
 function body(content, transition, force) {
   var t = type(content);
@@ -244,10 +256,12 @@ function merge(a, b) {
 
 module.exports = function(elem) {
   var init = {state: {}};
-  if (elem.innerHTML) {
+  if (!elem.innerHTML) return React.renderComponent(hyper(init), elem)
+  try {
     init.state = JSON.parse(elem.innerHTML);
     init.text = elem.innerHTML;
+  } catch (e) {
+    return false;
   }
   React.renderComponent(hyper(init), elem);
 };
-
