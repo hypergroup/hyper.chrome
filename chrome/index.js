@@ -263,5 +263,5 @@ module.exports = function(elem) {
   } catch (e) {
     return false;
   }
-  React.renderComponent(hyper(init), elem);
+  return React.renderComponent(hyper(init), elem);
 };
