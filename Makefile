@@ -1,5 +1,6 @@
 
 CHROME ?= /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
+EXT_KEY ?= extension.pem
 
 build: components index.js hyper.chrome.css
 	@component build
