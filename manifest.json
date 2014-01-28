@@ -27,5 +27,5 @@
     "hyper.js"
   ],
 
-  "update_url": "http://chrome.hypergroup.io/updates.xml"
+  "update_url": "http://hypergroup.github.io/hyper.chrome/updates.xml"
 }
