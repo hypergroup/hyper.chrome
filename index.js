@@ -73,14 +73,16 @@ var hyper = React.createClass({displayName: 'hyper',
     if (data && method !== 'GET') req.send(data);
 
     req.end(function(err, res) {
-      self.setState({loading: false});
-      if (err) return self.setState({err: err});
-
       self.setState({
+        loading: false,
+        status: res.status,
         body: res.body,
         text: res.text,
-        err: null
+        err: err
       });
+
+      if (err) return;
+
       var title = res.body.title || res.body.name || href;
       document.title = title;
       if (window.location === href || method !== 'GET') return;
@@ -127,6 +129,7 @@ var hyper = React.createClass({displayName: 'hyper',
       content,
       d.div({className: 'headers'},
         accessTokenPrompt(s.body, setHeader),
+        d.div({className: 'status'}, 'status: ', s.status),
         Object.keys(s.headers).map(function(name) {
           var val = s.headers[name];
 
