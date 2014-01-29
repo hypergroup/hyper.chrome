@@ -290,10 +290,9 @@ function merge(a, b) {
 
 module.exports = function(elem, storage, history) {
   var init = {
-    state: {
-      storage: storage,
-      history: history
-    }
+    state: {},
+    storage: storage,
+    history: history
   };
 
   if (!elem.innerHTML) return React.renderComponent(hyper(init), elem);
