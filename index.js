@@ -73,6 +73,7 @@ var hyper = React.createClass({displayName: 'hyper',
     if (data && method !== 'GET') req.send(data);
 
     req.end(function(err, res) {
+      res = res || {};
       self.setState({
         loading: false,
         status: res.status,
