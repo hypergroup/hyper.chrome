@@ -82,7 +82,7 @@ var hyper = React.createClass({displayName: 'hyper',
         err: err
       });
 
-      if (err) return;
+      if (err || !res.body) return;
 
       var title = res.body.title || res.body.name || href;
       document.title = title;
@@ -208,7 +208,10 @@ function form(content, transition, force) {
 
   function onChange(key) {
     return function(e) {
-      var val = e.target.value;
+      var val = e.target.options ?
+        getSelectedOptions(e.target)
+        : e.target.value;
+
       inputs[key].value = val;
       force();
       return true;
@@ -233,6 +236,15 @@ function form(content, transition, force) {
   );
 }
 
+function getSelectedOptions(select) {
+  var selected = [];
+  for (var i = select.options.length - 1; i >= 0; i--) {
+    var option = select.options[i];
+    if (option.selected) selected.push(option.value);
+  }
+  return selected;
+}
+
 function input(key, c, transition, onChange) {
   var opts = c.options || [];
 
@@ -246,16 +258,21 @@ function input(key, c, transition, onChange) {
   };
 
   var inp = c.type === 'select'
-    ? d.select(props,
-       (c.options || []).map(function(option) {
-         if (!option) return d.option({key: 'blank'}, '');
-         return d.option({value: option.value, required: c.required, key: option.name}, option.name || option.value);
-       }))
+    ? select(props, c)
     : d.input(merge(props, c));
 
   return d.div({key: key, className: 'object level'},
     kvs(c, transition),
     d.div({className: 'item'}, inp)
+  );
+}
+
+function select(props, c) {
+  return d.select(merge(props, c),
+    (c.options || []).map(function(option) {
+      if (!option) return d.option({key: 'blank'}, '');
+      return d.option({value: option.value, required: c.required, key: option.name}, option.name || option.value);
+    })
   );
 }
 
