@@ -316,7 +316,7 @@ module.exports = function(elem, storage, history) {
     history: history
   };
 
-  if (!elem.innerHTML) return React.renderComponent(hyper(init), elem);
+  if (elem && !elem.innerHTML) return React.renderComponent(hyper(init), elem);
 
   try {
     init.state = JSON.parse(elem.innerHTML);
