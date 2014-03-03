@@ -10,7 +10,9 @@ document.getElementsByTagName('head')[0].appendChild(script);
 
 function loadHyperChrome() {
   var hyper = require('hyper.chrome');
-  if (!hyper(document.body.children[0])) return;
+  var elem = document.body.children[0];
+  if (!elem) return;
+  if (!hyper(elem)) return;
   var style = document.createElement('link');
   style.setAttribute('href', csssrc);
   style.setAttribute('rel', 'stylesheet');
