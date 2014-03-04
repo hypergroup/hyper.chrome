@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <gupdate xmlns='http://www.google.com/update2/response' protocol='2.0'>
   <app appid='lpnflpdhhhfnhjbaphalakpealfpjhmc'>
-    <updatecheck codebase='http://hypergroup.github.io/hyper.chrome/hyper.chrome-0.0.4.crx' version='0.0.4' />
+    <updatecheck codebase='http://hypergroup.github.io/hyper.chrome/hyper.chrome-0.0.5.crx' version='0.0.5' />
   </app>
 </gupdate>
