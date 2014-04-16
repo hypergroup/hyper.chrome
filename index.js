@@ -271,7 +271,8 @@ function select(props, c) {
   return d.select(merge(props, c),
     (c.options || []).map(function(option) {
       if (!option) return d.option({key: 'blank'}, '');
-      return d.option({value: option.value, required: c.required, key: option.name}, option.name || option.value);
+      var text = option.name || option.text;
+      return d.option({value: option.value, required: c.required, key: text}, text || option.value);
     })
   );
 }
