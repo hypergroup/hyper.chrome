@@ -282,7 +282,7 @@ function object(content, transition, force) {
 
 function kvs(content, transition, force) {
   return Object.keys(content).map(function(key) {
-    if (!content[key]) return;
+    if (typeof content[key] === 'undefined') return;
     return d.div({className: 'item', key: key}, d.div({className: 'level key'}, key), body(content[key], transition, force));
   });
 }

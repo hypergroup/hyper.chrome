@@ -8,6 +8,8 @@ build: components index.js hyper.chrome.css
 extension.crx: build extension extension/manifest.json extension/hyper.js extension/hyper.css extension/content.js extension/loader.js
 	@$(CHROME) --pack-extension=$(CURDIR)/extension --pack-extension-key=$(EXT_KEY)
 
+ext: build extension extension/manifest.json extension/hyper.js extension/hyper.css extension/content.js extension/loader.js
+
 extension:
 	@mkdir -p $@
 
