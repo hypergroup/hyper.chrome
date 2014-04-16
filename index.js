@@ -208,7 +208,7 @@ function form(content, transition, force) {
 
   function onChange(key) {
     return function(e) {
-      var val = e.target.options ?
+      var val = (e.target.options && e.target.multiple) ?
         getSelectedOptions(e.target)
         : e.target.value;
 
