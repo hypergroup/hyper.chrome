@@ -268,13 +268,15 @@ function input(key, c, transition, onChange) {
 }
 
 function select(props, c) {
-  return d.select(merge(props, c),
-    (c.options || []).map(function(option) {
-      if (!option) return d.option({key: 'blank'}, '');
-      var text = option.name || option.text;
-      return d.option({value: option.value, required: c.required, key: text}, text || option.value);
-    })
-  );
+  var options = (c.options || []).map(function(option) {
+    if (!option) return d.option({key: 'blank'}, '');
+    var text = option.name || option.text;
+    return d.option({value: option.value, key: option.value}, text || option.value);
+  });
+  if (options.length > 0) {
+    options.unshift(d.option({key: 'blank'}, ''));
+  }
+  return d.select(merge(props, c), options);
 }
 
 function object(content, transition, force) {
