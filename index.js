@@ -259,9 +259,14 @@ function input(key, c, transition, onChange) {
     onChange: onChange(key)
   };
 
-  var inp = c.type === 'select'
-    ? select(props, c)
-    : d.input(merge(props, c));
+  var inp = null;
+  if (c.type === 'select') {
+    inp = select(props, c);
+  } else if (c.type === 'textarea') {
+    inp = d.textarea(merge(props, c));
+  } else {
+    inp = d.input(merge(props, c));
+  }
 
   return d.div({key: key, className: 'object level'},
     kvs(c, transition),
