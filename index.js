@@ -169,6 +169,8 @@ function body(content, transition, force) {
   if (t === 'string') return string(content, transition);
   if (t === 'number') return d.div({className: className}, '' + content);
   if (t === 'boolean') return d.div({className: className}, '' + content);
+  if (t === 'null') return d.div({className: className}, 'null');
+  if (t === 'undefined') return d.div({className: className}, 'undefined');
   if (t === 'array') return d.div({className: className},
     content.map(function(val, i) {
       return d.div({className: 'item', key: i}, body(val, transition));
