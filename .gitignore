@@ -1,5 +1,6 @@
-components
-build
 *.crx
 *.pem
-extension
+node_modules
+chrome/background.js
+chrome/content.js
+chrome/options.js

@@ -1,0 +1,42 @@
+{
+  "name": "hyper.chrome",
+  "version": "0.1.0",
+  "manifest_version": 2,
+  "description": "hyper+json browser for chrome",
+  "homepage_url": "http://hypergroup.io",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "default_locale": "en",
+  "background": {
+    "persistent": true,
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "options_page": "options.html",
+  "permissions": [
+    "<all_urls>",
+    "activeTab",
+    "clipboardRead",
+    "clipboardWrite",
+    "storage",
+    "tabs",
+    "webRequest",
+    "webRequestBlocking"
+  ],
+  "content_scripts": [
+    {
+      "all_frames": true,
+      "js": [
+        "content.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ],
+      "run_at": "document_start"
+    }
+  ]
+}
