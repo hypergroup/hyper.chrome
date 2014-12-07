@@ -8,7 +8,7 @@ var superagent = require('superagent');
 var dom = React.createElement;
 var merge = require('utils-merge');
 var renderHeaders = require('./headers');
-require('./style.css');
+require('./style.styl');
 
 /**
  * Create the HyperChrome class
@@ -17,14 +17,21 @@ require('./style.css');
 var Root = React.createClass({
   displayName: 'HyperChrome',
   getInitialState: function() {
-    return {};
+    return {
+      value: this.props.value,
+      activeId: window.location.hash.replace('#', '')
+    };
   },
   componentWillMount: function() {
     var self = this;
+    window.addEventListener("hashchange", function() {
+      self.setState({activeId: window.location.hash.replace('#', '')});
+    }, false);
   },
   componentDidMount: function() {
+    var self = this;
     setTimeout(function() {
-      var el = document.getElementById(window.location.hash.replace('#', ''));
+      var el = document.getElementById(self.state.activeId);
       el && el.scrollIntoView();
     });
   },
@@ -35,33 +42,30 @@ var Root = React.createClass({
   render: function() {
     var self = this;
     var opts = {
+      activeId: self.state.activeId,
       // hiddenField: {name: '___HYPER_CHROME___', value: '1'},
       onChange: onChange,
       onSubmit: onSubmit,
       getValue: getValue
     };
 
-    function onSubmit(inputs, evt) {
+    function onSubmit(evt, data) {
       var target = evt.target;
       var method = target.method;
       if (method.toLowerCase() === 'get') return;
-      // We'll need to wait until chrome can modify the requestBody or
-      // json form submission is ready
       evt.preventDefault();
-      var obj = inputs.reduce(function(acc, input) {
-        acc[input.name] = self.state[input.path];
-        return acc;
-      }, {});
 
       superagent(method, target.action)
-        .send(obj)
+        .set({'x-hyper-client': 'hyper.chrome'})
+        .send(data)
         .end(function(err, res) {
           if (err) return self.setState({error: err});
-          console.log(res);
+          if (res.body) return self.setState({value: res.body});
+          // TODO what do we do here?
         });
     }
 
-    function onChange(path, evt) {
+    function onChange(evt, path) {
       var update = {};
       update[path] = evt.target.value;
       self.setState(update);
@@ -75,7 +79,7 @@ var Root = React.createClass({
       dom('div', null,
         renderHeaders(),
         dom('pre', null,
-          render(this.props.value, dom, opts)
+          render(this.state.value, dom, opts)
         )
       )
     );

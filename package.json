@@ -24,12 +24,18 @@
     "component-emitter": "^1.1.3",
     "hyper-browser": "^0.1.0",
     "react": "^0.12.1",
+    "shoelace-ui-font-family": "^0.1.0",
+    "shoelace-ui-font-size": "^0.1.0",
+    "shoelace-ui-palette-solarized": "^0.1.0",
+    "shoelace-ui-reset": "^0.1.1",
+    "shoelace-ui-transition": "^0.1.0",
     "superagent": "^0.21.0",
     "utils-merge": "^1.0.0"
   },
   "devDependencies": {
     "css-loader": "^0.9.0",
     "style-loader": "^0.8.2",
+    "stylus-loader": "^0.4.0",
     "webpack": "^1.4.13"
   }
 }

@@ -1,0 +1,46 @@
+/**
+ * Module dependencies
+ */
+
+@require 'shoelace-ui-font-family'
+@require 'shoelace-ui-font-size'
+@require 'shoelace-ui-palette-solarized'
+@require 'shoelace-ui-reset'
+@require 'shoelace-ui-transition'
+
+pre
+  font-family('monospace')
+  font-size('small')
+
+.item
+  margin-left 20px
+
+.item.active
+  transition background short linear
+  background palette--gray-lightest
+
+.value
+  display inline
+
+.boolean,
+.null,
+.number
+  color palette--yellow
+
+.string
+  color palette--green
+
+a,
+a:visited
+  color palette--blue
+
+.key a
+  color palette--gray-darker
+  text-decoration initial
+
+.key a:hover
+  text-decoration underline
+
+.hyper-form
+  margin 0
+  display inline

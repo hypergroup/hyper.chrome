@@ -29,6 +29,6 @@ config.plugins = [
 
 config.module = {
   loaders: [
-    {test: /\.css$/, loader: 'style-loader!css-loader'}
+    {test: /\.styl$/, loader: 'style-loader!css-loader!stylus-loader?paths=node_modules'}
   ]
 }
