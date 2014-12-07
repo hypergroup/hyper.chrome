@@ -26,6 +26,7 @@
     "react": "^0.12.1",
     "shoelace-ui-font-family": "^0.1.0",
     "shoelace-ui-font-size": "^0.1.0",
+    "shoelace-ui-gray": "^0.1.0",
     "shoelace-ui-palette-solarized": "^0.1.0",
     "shoelace-ui-reset": "^0.1.1",
     "shoelace-ui-transition": "^0.1.0",

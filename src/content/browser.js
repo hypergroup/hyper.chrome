@@ -8,6 +8,7 @@ var superagent = require('superagent');
 var dom = React.createElement;
 var merge = require('utils-merge');
 var renderHeaders = require('./headers');
+var storage = require('../../lib/storage');
 require('./style.styl');
 
 /**
@@ -27,6 +28,10 @@ var Root = React.createClass({
     window.addEventListener("hashchange", function() {
       self.setState({activeId: window.location.hash.replace('#', '')});
     }, false);
+
+    storage.on('change', function() {
+      self.forceUpdate();
+    });
   },
   componentDidMount: function() {
     var self = this;
