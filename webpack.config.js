@@ -24,8 +24,9 @@ config.plugins = [
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': '"' + process.env.NODE_ENV + '"'
   }),
-  // new webpack.optimize.UglifyJsPlugin({output: {comments: false}})
 ];
+
+if (process.env.MIN) config.plugins.push(new webpack.optimize.UglifyJsPlugin({output: {comments: false}}));
 
 config.module = {
   loaders: [

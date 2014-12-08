@@ -5,7 +5,7 @@ WEBPACK ?= ./node_modules/.bin/webpack
 
 build:
 	@mkdir -p chrome
-	@$(WEBPACK)
+	@NODE_ENV=production MIN=1 $(WEBPACK)
 
 dev:
 	@mkdir -p chrome
