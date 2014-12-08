@@ -33,17 +33,38 @@ var Root = React.createClass({
       activeId: hash
     };
   },
+
+  handleHashUpdate: function() {
+    var hash = getHash();
+    var el = document.getElementById(hash);
+    this.setState({
+      activeId: hash,
+      hasActiveId: !!el
+    });
+    this.refs['search-field'].getDOMNode().focus();
+    el && el.scrollIntoViewIfNeeded();
+  },
+
+  handleSubmit: function(evt, data) {
+    var self = this;
+    var target = evt.target;
+    var method = target.method;
+    if (method.toLowerCase() === 'get') return;
+    evt.preventDefault();
+
+    superagent(method, target.action)
+      .set({'x-hyper-client': 'hyper.chrome'})
+      .send(data)
+      .end(function(err, res) {
+        if (err) return self.setState({error: err});
+        if (res.body) return self.setState({value: res.body});
+        // TODO what do we do here?
+      });
+  },
+
   componentWillMount: function() {
     var self = this;
-    window.addEventListener("hashchange", function(evt) {
-      var hash = getHash();
-      self.setState({
-        activeId: hash,
-        hasActiveId: !!document.getElementById(hash)
-      });
-      self.refs['search-field'].getDOMNode().focus();
-    }, false);
-
+    window.addEventListener("hashchange", this.handleHashUpdate, false);
     storage.on('change', function() {
       self.forceUpdate();
     });
@@ -52,7 +73,7 @@ var Root = React.createClass({
     var self = this;
     setTimeout(function() {
       var el = document.getElementById(self.state.activeId);
-      el && el.scrollIntoView();
+      el && el.scrollIntoViewIfNeeded();
       self.setState({hasActiveId: !!el});
     });
   },
@@ -66,24 +87,16 @@ var Root = React.createClass({
       activeId: self.state.activeId,
       // hiddenField: {name: '___HYPER_CHROME___', value: '1'},
       onChange: onChange,
-      onSubmit: onSubmit,
+      onSubmit: this.handleSubmit,
+      onUpdateHash: onUpdateHash,
       getValue: getValue
     };
 
-    function onSubmit(evt, data) {
-      var target = evt.target;
-      var method = target.method;
-      if (method.toLowerCase() === 'get') return;
+    function onUpdateHash(evt) {
       evt.preventDefault();
-
-      superagent(method, target.action)
-        .set({'x-hyper-client': 'hyper.chrome'})
-        .send(data)
-        .end(function(err, res) {
-          if (err) return self.setState({error: err});
-          if (res.body) return self.setState({value: res.body});
-          // TODO what do we do here?
-        });
+      var hash = evt.target.href.split('#')[1];
+      history.replaceState('', document.title, '#' + hash);
+      window.dispatchEvent(new Event('hashchange'));
     }
 
     function onChange(evt, path) {
