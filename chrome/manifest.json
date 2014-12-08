@@ -11,6 +11,9 @@
       "background.js"
     ]
   },
+  "omnibox": {
+    "keyword": "hyper!"
+  },
   "options_page": "options.html",
   "permissions": [
     "<all_urls>",

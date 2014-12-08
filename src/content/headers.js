@@ -24,6 +24,8 @@ function renderHeaders() {
     target.reset();
   }
 
+  if (window.location.protocol === 'chrome-extension:') return null;
+
   return (
     dom('div', {className: 'headers'},
       Object.keys(headers).map(function(name) {
