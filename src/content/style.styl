@@ -8,16 +8,19 @@
 @require 'shoelace-ui-reset'
 @require 'shoelace-ui-transition'
 
+search-size = 30px
+
 pre
   font-family('monospace')
   font-size('small')
+  padding-bottom search-size
 
 .item
   margin-left 20px
 
 .item.active
   transition background short linear
-  background palette--gray-lightest
+  background lighten(palette--gray-lightest, 40%)
 
 .value
   display inline
@@ -50,7 +53,28 @@ a:visited
   font-size('small')
   background #f1f1f1
   position fixed
-  bottom 5px
+  bottom 5px + search-size
   right 5px
   padding 10px
   border-radius 5px
+
+.search
+  height search-size
+  width 100%
+  position fixed
+  bottom 0
+  left 0
+  right
+
+  input
+    border none
+    outline palette--blue 1px solid
+    padding 5px
+    height 100%
+    width 100%
+    font-family('monospace')
+    font-size('small')
+
+    &:focus
+      border none
+      outline palette--blue 1px solid

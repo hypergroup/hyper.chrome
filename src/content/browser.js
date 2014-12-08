@@ -8,8 +8,17 @@ var superagent = require('superagent');
 var dom = React.createElement;
 var merge = require('utils-merge');
 var renderHeaders = require('./headers');
+var renderSearch = require('./search');
 var storage = require('../../lib/storage');
 require('./style.styl');
+
+/**
+ * Get the hash for the current page
+ */
+
+function getHash() {
+  return window.location.hash.substr(1);
+}
 
 /**
  * Create the HyperChrome class
@@ -20,13 +29,14 @@ var Root = React.createClass({
   getInitialState: function() {
     return {
       value: this.props.value,
-      activeId: window.location.hash.replace('#', '')
+      activeId: getHash()
     };
   },
   componentWillMount: function() {
     var self = this;
-    window.addEventListener("hashchange", function() {
-      self.setState({activeId: window.location.hash.replace('#', '')});
+    window.addEventListener("hashchange", function(evt) {
+      self.setState({activeId: getHash()});
+      self.refs['search-field'].getDOMNode().focus();
     }, false);
 
     storage.on('change', function() {
@@ -83,8 +93,9 @@ var Root = React.createClass({
     return (
       dom('div', null,
         renderHeaders(),
+        renderSearch(self.state.activeId),
         dom('pre', null,
-          render(this.state.value, dom, opts)
+          render(self.state.value, dom, opts)
         )
       )
     );
