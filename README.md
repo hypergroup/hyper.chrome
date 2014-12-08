@@ -11,6 +11,12 @@ Installation
 Features
 --------
 
+### Deep link
+
+Deep link into the JSON payload.
+
+![deep-link](images/deep-link.gif)
+
 ### Headers
 
 Send any needed headers for the request.
