@@ -3,12 +3,7 @@
   "version": "0.1.0",
   "manifest_version": 2,
   "description": "hyper+json browser for chrome",
-  "homepage_url": "http://hypergroup.io",
-  "icons": {
-    "16": "icons/icon16.png",
-    "48": "icons/icon48.png",
-    "128": "icons/icon128.png"
-  },
+  "homepage_url": "https://github.com/hypergroup/hyper.chrome",
   "default_locale": "en",
   "background": {
     "persistent": true,
