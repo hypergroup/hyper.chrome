@@ -27,15 +27,20 @@ function getHash() {
 var Root = React.createClass({
   displayName: 'HyperChrome',
   getInitialState: function() {
+    var hash = getHash();
     return {
       value: this.props.value,
-      activeId: getHash()
+      activeId: hash
     };
   },
   componentWillMount: function() {
     var self = this;
     window.addEventListener("hashchange", function(evt) {
-      self.setState({activeId: getHash()});
+      var hash = getHash();
+      self.setState({
+        activeId: hash,
+        hasActiveId: !!document.getElementById(hash)
+      });
       self.refs['search-field'].getDOMNode().focus();
     }, false);
 
@@ -48,6 +53,7 @@ var Root = React.createClass({
     setTimeout(function() {
       var el = document.getElementById(self.state.activeId);
       el && el.scrollIntoView();
+      self.setState({hasActiveId: !!el});
     });
   },
   componentWillReceiveProps: function(next) {
@@ -93,7 +99,7 @@ var Root = React.createClass({
     return (
       dom('div', null,
         renderHeaders(),
-        renderSearch(self.state.activeId),
+        renderSearch(self.state.activeId, self.state.hasActiveId),
         dom('pre', null,
           render(self.state.value, dom, opts)
         )

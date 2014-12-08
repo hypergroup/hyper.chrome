@@ -67,8 +67,6 @@ a:visited
   right
 
   input
-    border none
-    outline palette--blue 1px solid
     padding 5px
     height 100%
     width 100%
@@ -78,3 +76,13 @@ a:visited
     &:focus
       border none
       outline palette--blue 1px solid
+
+  &.found
+    input
+      border none
+      outline palette--green 1px solid
+
+  &.missing
+    input
+      border none
+      outline palette--red 1px solid
