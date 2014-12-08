@@ -18,6 +18,6 @@ function content() {
   if (!el || el.tagName !== 'PRE') return;
   try {
     var body = JSON.parse(el.innerHTML);
-    if (body && body.href) return body;
+    if (body && typeof body === 'object') return body;
   } catch (err) {}
 }
