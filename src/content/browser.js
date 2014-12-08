@@ -45,14 +45,13 @@ var Root = React.createClass({
     el && el.scrollIntoViewIfNeeded();
   },
 
-  handleSubmit: function(evt, data) {
+  handleSubmit: function(evt, data, action, method) {
     var self = this;
     var target = evt.target;
-    var method = target.method;
     if (method.toLowerCase() === 'get') return;
     evt.preventDefault();
 
-    superagent(method, target.action)
+    superagent(method, action)
       .set({'x-hyper-client': 'hyper.chrome'})
       .send(data)
       .end(function(err, res) {
@@ -64,7 +63,7 @@ var Root = React.createClass({
           if (body.href && body.href !== window.location.href) return window.location = body.href;
           return self.setState({value: res.body});
         }
-        // TODO what do we do if we get here?
+        window.location.reload();
       });
   },
 
