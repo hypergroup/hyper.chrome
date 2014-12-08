@@ -57,8 +57,14 @@ var Root = React.createClass({
       .send(data)
       .end(function(err, res) {
         if (err) return self.setState({error: err});
-        if (res.body) return self.setState({value: res.body});
-        // TODO what do we do here?
+        var href = res.headers['content-location'] || res.headers['location'];
+        if (href && href !== window.location.href) return window.location = href;
+        var body = res.body;
+        if (body) {
+          if (body.href && body.href !== window.location.href) return window.location = body.href;
+          return self.setState({value: res.body});
+        }
+        // TODO what do we do if we get here?
       });
   },
 

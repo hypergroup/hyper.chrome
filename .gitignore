@@ -4,3 +4,4 @@ node_modules
 chrome/background.js
 chrome/content.js
 chrome/options.js
+hyper.chrome.zip
