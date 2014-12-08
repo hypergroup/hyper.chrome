@@ -11,6 +11,12 @@ Installation
 Features
 --------
 
+### Headers
+
+Send any needed headers for the request.
+
+![headers](images/headers.gif)
+
 ### Omnibox
 
 Type `hyper!` and hit `TAB` to input arbitrary JSON.
