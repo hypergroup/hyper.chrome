@@ -1,6 +1,6 @@
 {
   "name": "hyper.chrome",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "hyper+json client for chrome",
   "main": "index.js",
   "scripts": {
