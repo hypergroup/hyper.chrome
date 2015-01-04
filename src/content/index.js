@@ -17,7 +17,7 @@ function content() {
   var el = document.body.children[0];
   if (!el || el.tagName !== 'PRE') return;
   try {
-    var body = JSON.parse(el.innerHTML || inlineJson());
+    var body = JSON.parse(el.textContent || inlineJson());
     if (body && typeof body === 'object') return body;
   } catch (err) {}
 }
