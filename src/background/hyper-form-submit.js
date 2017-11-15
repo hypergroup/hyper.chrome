@@ -5,13 +5,8 @@ const KEY = '___HYPER_BROWSER___';
  */
 
 const filter = {
-  urls: [
-    '<all_urls>'
-  ],
-  types: [
-    'main_frame',
-    'sub_frame'
-  ]
+  urls: ['<all_urls>'],
+  types: ['main_frame', 'sub_frame']
 };
 
 /**
