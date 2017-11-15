@@ -1,0 +1,170 @@
+:root {
+  --font-family: Source Code Pro, monospace;
+  --font-size: 13px;
+  --search-size: 30px;
+  --transition-short: 25ms;
+
+  --palette-black: #073642;
+  --palette-blue: #268bd2;
+  --palette-brblack: #002b36;
+  --palette-brblue: #839496;
+  --palette-brcyan: #93a1a1;
+  --palette-brgreen: #586e75;
+  --palette-brmagenta: #6c71c4;
+  --palette-brred: #cb4b16;
+  --palette-brwhite: #fdf6e3;
+  --palette-bryellow: #657b83;
+  --palette-cyan: #2aa198;
+  --palette-green: #859900;
+  --palette-magenta: #d33682;
+  --palette-red: #dc322f;
+  --palette-white: #eee8d5;
+  --palette-yellow: #b58900;
+}
+
+html,
+pre {
+  font-size: var(--font-size);
+  font-family: var(--font-family);
+  line-height: var(--font-size);
+}
+
+input,
+textarea {
+  font-family: var(--font-family);
+  font-size: .9rem;
+  line-height: 1rem;
+}
+
+pre {
+  padding-bottom: var(--search-size);
+  white-space: pre-wrap;
+}
+
+.open.bracket,
+.close.bracket {
+  font-size: .9rem;
+  opacity: .9;
+}
+
+.item {
+  margin-left: 1rem;
+}
+
+.item.active {
+  background-color: hsla(0, 0%, 0%, .1);
+  transition: background-color var(--transition-short) linear;
+}
+
+.value {
+  display: inline;
+}
+
+.boolean,
+.null,
+.number {
+  color: var(--palette-yellow);
+}
+
+.string {
+  color: var(--palette-green);
+}
+
+a,
+a:visited {
+  color: var(--palette-blue);
+}
+
+.key a {
+  color: var(--palette-black);
+  text-decoration: initial;
+}
+
+.key a:hover {
+  text-decoration: underline;
+}
+
+.hyper-form {
+  display: inline;
+  margin: 0;
+}
+
+.quote {
+  display: inline-block;
+  opacity: .9;
+  transform: scaleX(.9);
+}
+
+.header {
+  display: flex;
+}
+
+.header span,
+.header input,
+.header a {
+  align-self: center;
+}
+
+.header span {
+  flex: 1;
+  margin-right: 1rem;
+}
+
+.headers {
+  border-radius: .25rem;
+  bottom: var(--search-size);
+  padding: .5rem;
+  position: fixed;
+  transition: all var(--transition-short) linear;
+  right: 0;
+}
+
+.headers .close {
+  color: inherit;
+  font-size: 1.5rem;
+  font-weight: 100;
+  margin-right: .5rem;
+  padding-left: .5rem;
+  padding-right: .5rem;
+  text-decoration: none;
+}
+
+.headers .close:focus,
+.headers .close:hover {
+  font-weight: bold;
+  outline: 0;
+}
+
+.search {
+  bottom: 0;
+  height: var(--search-size);
+  left: 0;
+  position: fixed;
+  right: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+.search input {
+  border: none;
+  height: 100%;
+  outline: hsla(0, 0%, 0%, .25) 1px solid;
+  opacity: .25;
+  padding: .5rem;
+  transition: all var(--transition-short) linear;
+  width: 100%;
+}
+
+.search:focus-within,
+.search input:hover {
+  opacity: 1;
+  outline: var(--palette-blue) 1px solid;
+}
+
+.search.found input {
+  outline: var(--palette-green) 1px solid;
+}
+
+.search.missing input {
+  outline: var(--palette-red) 1px solid;
+}

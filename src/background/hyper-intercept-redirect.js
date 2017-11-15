@@ -2,7 +2,7 @@
  * Request body filter
  */
 
-var filter = {
+const filter = {
   urls: ['<all_urls>'],
   types: ['xmlhttprequest']
 };

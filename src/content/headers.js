@@ -2,8 +2,8 @@
  * Module dependencies
  */
 
-var dom = require('react').createElement;
-var store = require('../../lib/host-storage');
+const dom = require('react').createElement;
+const store = require('../../lib/host-storage');
 
 module.exports = renderHeaders;
 
@@ -12,14 +12,13 @@ module.exports = renderHeaders;
  */
 
 function renderHeaders() {
-  var host = '' + window.location;
-
-  var headers = store.getHeaders(host) || {};
+  const host = '' + window.location;
+  const headers = store.getHeaders(host) || {};
 
   function addHeader(evt) {
     evt.preventDefault();
-    var target = evt.target;
-    var name = target.elements[0].value;
+    const target = evt.target;
+    const name = target.elements[0].value;
     store.setHeader(host, name, '');
     target.reset();
   }
@@ -28,27 +27,28 @@ function renderHeaders() {
 
   return (
     dom('div', {className: 'headers'},
-      Object.keys(headers).map(function(name) {
+      Object.keys(headers).map(name => {
+        let value = headers[name];
+
         function onSubmit(evt) {
           evt.preventDefault();
+          store.setHeader(host, name, value);
           window.location.reload();
         }
 
         function update(evt) {
-          var value = evt.target.value;
-          store.setHeader(host, name, value);
+          value = evt.target.value;
         }
 
         function remove() {
           store.removeHeader(host, name);
         }
 
-        var value = headers[name];
         return (
           dom('form', {className: 'header', key: name, onSubmit: onSubmit},
             dom('span', null, name + ': '),
-            dom('input', {type: 'text', value: value, onChange: update}),
-            dom('a', {href: 'javascript:;', onClick: remove}, '×')
+            dom('input', {type: 'text', defaultValue: value, onChange: update}),
+            dom('a', {className: 'close', href: 'javascript:;', onClick: remove}, '×')
           )
         );
       }),

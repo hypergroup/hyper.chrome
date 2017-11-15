@@ -3,21 +3,23 @@ CHROME ?= /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
 EXT_KEY ?= extension.pem
 WEBPACK ?= ./node_modules/.bin/webpack
 
-hyper.chrome.zip: build
-	@zip -r $@ chrome
+browser/images:
+	@mkdir $@
+	@cp images/logo.gif $@/logo.gif
 
-build:
-	@mkdir -p chrome
+hyper.chrome.zip: build
+	@zip -r $@ browser
+
+build: browser/images
 	@NODE_ENV=production MIN=1 $(WEBPACK)
 
-dev:
-	@mkdir -p chrome
+dev: browser/images
 	@$(WEBPACK) --watch
 
 extension.crx: build
 	@$(CHROME) --pack-extension=$(CURDIR)/extension --pack-extension-key=$(EXT_KEY)
 
 clean:
-	@rm -f chrome/background.js* chrome/content.js* chrome/options.js*
+	@rm -rf browser/background.js* browser/content.js* browser/images
 
 .PHONY: clean build

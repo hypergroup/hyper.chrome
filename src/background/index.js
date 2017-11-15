@@ -1,3 +1,5 @@
+global.browser = global.browser || global.chrome;
+
 /**
  * Module dependencies
  */
@@ -14,7 +16,7 @@ require('./hyper-intercept-redirect');
  * Listen for omnibox input
  */
 
-chrome.omnibox.onInputEntered.addListener(function(text, disposition) {
-  var url = chrome.extension.getURL('inline.html?' + encodeURIComponent(text));
-  chrome.tabs.update({url: url});
+browser.omnibox.onInputEntered.addListener(function(text, disposition) {
+  const url = chrome.extension.getURL('inline.html?' + encodeURIComponent(text));
+  browser.tabs.update({url: url});
 });

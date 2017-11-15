@@ -2,13 +2,13 @@
  * Inspired by https://github.com/andreineculau/chrome-inline-media-type
  */
 
-var RE = /hyper\+json *;? *(.*)/;
+const RE = /hyper\+json *;? *(.*)/;
 
 /**
  * Response filter
  */
 
-var filter = {
+const filter = {
   urls: ['<all_urls>'],
   types: ['main_frame', 'sub_frame']
 };
@@ -17,14 +17,14 @@ var filter = {
  * Listen for responses
  */
 
-chrome.webRequest.onHeadersReceived.addListener(handle, filter, ['blocking', 'responseHeaders']);
+browser.webRequest.onHeadersReceived.addListener(handle, filter, ['blocking', 'responseHeaders']);
 
 /**
  * Handle a response
  */
 
 function handle(details) {
-  var isHyper = false;
+  let isHyper = false;
   details.responseHeaders.forEach(function(header) {
     if (header.name.toLowerCase() === 'content-type' && RE.test(header.value)) isHyper = true;
   });

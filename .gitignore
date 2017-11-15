@@ -1,7 +1,7 @@
 *.crx
 *.pem
 node_modules
-chrome/background.js
-chrome/content.js
-chrome/options.js
+browser/background.js
+browser/content.js
+browser/images*
 hyper.chrome.zip
