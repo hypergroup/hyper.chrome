@@ -1,33 +1,30 @@
+
 /**
  * Module dependencies
  */
 
-var React = require('react');
-var render = require('hyper-browser');
-var superagent = require('superagent');
-var dom = React.createElement;
-var merge = require('utils-merge');
-var renderHeaders = require('./headers');
-var renderSearch = require('./search');
-var storage = require('../../lib/storage');
-require('./style.styl');
-
-/**
- * Get the hash for the current page
- */
+const React = require('react');
+const ReactDOM = require('react-dom');
+const createClass = require('create-react-class');
+const render = require('hyper-browser');
+const superagent = require('superagent');
+const dom = React.createElement;
+const renderHeaders = require('./headers');
+const renderSearch = require('./search');
+require('./style.css');
 
 function getHash() {
   return window.location.hash.substr(1);
 }
 
 /**
- * Create the HyperChrome class
+ * Create the HyperBrowser class
  */
 
-var Root = React.createClass({
-  displayName: 'HyperChrome',
+const Root = createClass({
+  displayName: 'HyperBrowser',
   getInitialState: function() {
-    var hash = getHash();
+    const hash = getHash();
     return {
       value: this.props.value,
       activeId: hash
@@ -35,8 +32,8 @@ var Root = React.createClass({
   },
 
   handleHashUpdate: function() {
-    var hash = getHash();
-    var el = document.getElementById(hash);
+    const hash = getHash();
+    const el = document.getElementById(hash);
     this.setState({
       activeId: hash,
       hasActiveId: !!el
@@ -46,19 +43,19 @@ var Root = React.createClass({
   },
 
   handleSubmit: function(evt, data, action, method) {
-    var self = this;
-    var target = evt.target;
+    const self = this;
+    const target = evt.target;
     if (method.toLowerCase() === 'get') return;
     evt.preventDefault();
 
     superagent(method, action)
-      .set({'x-hyper-client': 'hyper.chrome'})
+      .set({'x-hyper-client': 'hyper.browser'})
       .send(data)
       .end(function(err, res) {
         if (err) return self.setState({error: err});
-        var href = res.headers['content-location'] || res.headers['location'];
+        const href = res.headers['content-location'] || res.headers['location'];
         if (href && href !== window.location.href) return window.location = href;
-        var body = res.body;
+        const body = res.body;
         if (body) {
           if (body.href && body.href !== window.location.href) return window.location = body.href;
           return self.setState({value: res.body});
@@ -67,50 +64,54 @@ var Root = React.createClass({
       });
   },
 
+
   componentWillMount: function() {
-    var self = this;
-    window.addEventListener("hashchange", this.handleHashUpdate, false);
-    storage.on('change', function() {
+    const self = this;
+    window.addEventListener('hashchange', self.handleHashUpdate, false);
+    browser.storage.onChanged.addListener(function() {
       self.forceUpdate();
     });
   },
+
   componentDidMount: function() {
-    var self = this;
+    const self = this;
     setTimeout(function() {
-      var el = document.getElementById(self.state.activeId);
+      const el = document.getElementById(self.state.activeId);
       el && el.scrollIntoViewIfNeeded();
       self.setState({hasActiveId: !!el});
     });
   },
+
   componentWillReceiveProps: function(next) {
     this.setState(next);
   },
 
   render: function() {
-    var self = this;
-    var opts = {
+    const self = this;
+
+    const opts = {
       activeId: self.state.activeId,
-      // hiddenField: {name: '___HYPER_CHROME___', value: '1'},
+      // hiddenField: {name: '___HYPER_BROWSER___', value: '1'},
       onChange: onChange,
-      onSubmit: this.handleSubmit,
+      onSubmit: self.handleSubmit,
       onUpdateHash: onUpdateHash,
       getValue: getValue
     };
 
     function onUpdateHash(evt) {
       evt.preventDefault();
-      var hash = evt.target.href.split('#')[1];
+      const hash = evt.target.href.split('#')[1];
       history.replaceState('', document.title, '#' + hash);
       window.dispatchEvent(new Event('hashchange'));
     }
 
-    function onChange(evt, path) {
-      var update = {};
+    function onChange(evt, path, obj) {
+      const update = {};
       update[path] = evt.target.value;
       self.setState(update);
     }
 
-    function getValue(path) {
+    function getValue(path, obj) {
       return self.state[path];
     }
 
@@ -127,7 +128,7 @@ var Root = React.createClass({
 });
 
 /**
- * Initialize a HyperChrome instance for a given node
+ * Initialize a HyperBrowser instance for a given node
  *
  * @param {Object} val
  * @param {Node} el
@@ -135,6 +136,6 @@ var Root = React.createClass({
  */
 
 module.exports = function(val, el) {
-  var out = dom(Root, {value: val});
-  return React.render(out, el);
+  const out = dom(Root, {value: val});
+  return ReactDOM.render(out, el);
 };

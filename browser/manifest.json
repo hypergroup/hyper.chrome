@@ -1,20 +1,15 @@
 {
-  "name": "hyper.chrome",
-  "version": "0.1.6",
   "manifest_version": 2,
-  "description": "hyper+json browser for chrome",
+  "name": "hyper",
+  "version": "1.0",
   "homepage_url": "https://github.com/hypergroup/hyper.chrome",
-  "default_locale": "en",
-  "background": {
-    "persistent": true,
-    "scripts": [
-      "background.js"
-    ]
+  "description": "hyper+json client for the browser",
+  "icons": {
+    "128": "images/logo.gif"
   },
   "omnibox": {
     "keyword": "hyper!"
   },
-  "options_page": "options.html",
   "permissions": [
     "<all_urls>",
     "activeTab",
@@ -22,9 +17,17 @@
     "clipboardWrite",
     "storage",
     "tabs",
+    "unlimitedStorage",
     "webRequest",
     "webRequestBlocking"
   ],
+  "background": {
+    "persistent": true,
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "default_locale": "en",
   "content_scripts": [
     {
       "all_frames": true,

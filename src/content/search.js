@@ -2,11 +2,11 @@
  * Module dependencies
  */
 
-var dom = require('react').createElement;
+const dom = require('react').createElement;
 
 module.exports = function(id, hasResult) {
   function onChange(evt) {
-    var val = evt.target.value;
+    let val = evt.target.value;
     if (val && val.charAt(0) !== '/') val = '/' + val;
     if (val === '/') val = '';
 
@@ -16,7 +16,7 @@ module.exports = function(id, hasResult) {
     window.dispatchEvent(new Event('hashchange'));
   }
 
-  var found = id ? (hasResult ? ' found' : ' missing') : '';
+  const found = id ? (hasResult ? ' found' : ' missing') : '';
 
   if (!id) id = '/';
 
